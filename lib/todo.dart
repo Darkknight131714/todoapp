@@ -40,6 +40,11 @@ class _TodoState extends State<Todo> {
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
           } else {
+            if (snapshot.data!.docs.length == 0) {
+              return Center(
+                child: Text("No Tasks Left 🥳"),
+              );
+            }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -61,7 +66,6 @@ class _TodoState extends State<Todo> {
                       ),
                     ),
                     onDismissed: (direction) async {
-                      await snapshot.data!.docs[index].reference.delete();
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
                           duration: Duration(seconds: 1),
@@ -73,6 +77,7 @@ class _TodoState extends State<Todo> {
                           ),
                         ),
                       );
+                      await snapshot.data!.docs[index].reference.delete();
                     },
                     child: Card(
                       child: ListTile(

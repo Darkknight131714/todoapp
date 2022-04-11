@@ -34,18 +34,20 @@ class _UrgentState extends State<Urgent> {
       body: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
             .collection(Provider.of<Useri>(context).email)
-            .orderBy('time', descending: true)
+            .where('isUrgent', isEqualTo: true)
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return CircularProgressIndicator();
           } else {
+            if (snapshot.data!.docs.length == 0) {
+              return Center(
+                child: Text("No Urgent Tasks Left 🥳"),
+              );
+            }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                if (snapshot.data!.docs[index]['isUrgent'] == false) {
-                  return Container();
-                }
                 return Dismissible(
                   key: Key(snapshot.data!.docs[index]['task']),
                   background: Container(
@@ -59,12 +61,13 @@ class _UrgentState extends State<Urgent> {
                     ),
                   ),
                   onDismissed: (direction) async {
-                    await snapshot.data!.docs[index].reference.delete();
                     ScaffoldMessenger.of(context).showSnackBar(
                       SnackBar(
+                        duration: Duration(seconds: 1),
                         content: Text("Task Done 🥳"),
                       ),
                     );
+                    await snapshot.data!.docs[index].reference.delete();
                   },
                   child: Card(
                     child: ListTile(
