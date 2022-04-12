@@ -38,11 +38,14 @@ class _UrgentState extends State<Urgent> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.data!.docs.length == 0) {
               return Center(
-                child: Text("No Urgent Tasks Left 🥳"),
+                child: Text(
+                  "No Urgent Tasks Left 🥳",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                ),
               );
             }
             return ListView.builder(
@@ -80,19 +83,19 @@ class _UrgentState extends State<Urgent> {
                           icon: snapshot.data!.docs[index]['isDone']
                               ? Icon(
                                   Icons.check_circle,
-                                  color: Colors.green,
+                                  color: Colors.orange,
                                   size: 30,
                                 )
                               : Icon(
                                   Icons.circle_outlined,
-                                  color: Colors.purple,
+                                  color: Colors.white,
                                   size: 30,
                                 )),
                       title: Text(
                         snapshot.data!.docs[index]['task'],
                         style: TextStyle(
                             fontSize: 20,
-                            fontWeight: FontWeight.w600,
+                            fontWeight: FontWeight.w400,
                             decoration: snapshot.data!.docs[index]['isDone']
                                 ? TextDecoration.lineThrough
                                 : null),

@@ -22,6 +22,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
+              SizedBox(
+                height: 30,
+              ),
               Padding(
                 padding: const EdgeInsets.all(40.0),
                 child: CircleAvatar(
@@ -115,6 +118,24 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   }
                 },
                 child: Text("Sign Up"),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Already have an account?",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      "Log in",
+                      style: TextStyle(fontSize: 18, color: Colors.orange),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

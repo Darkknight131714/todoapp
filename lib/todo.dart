@@ -38,76 +38,83 @@ class _TodoState extends State<Todo> {
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            return CircularProgressIndicator();
+            return Center(child: CircularProgressIndicator());
           } else {
             if (snapshot.data!.docs.length == 0) {
               return Center(
-                child: Text("No Tasks Left 🥳"),
+                child: Text(
+                  "No Tasks Left 🥳",
+                  style: TextStyle(fontSize: 25, fontWeight: FontWeight.w700),
+                ),
               );
             }
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Dismissible(
-                    key: Key(snapshot.data!.docs[index]['task']),
-                    background: Container(
-                      color: Colors.red,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Icon(Icons.delete),
-                            Icon(Icons.delete),
-                          ],
-                        ),
+                return Dismissible(
+                  key: Key(snapshot.data!.docs[index]['task']),
+                  background: Container(
+                    color: Colors.red,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Icon(Icons.delete),
+                          Icon(Icons.delete),
+                        ],
                       ),
                     ),
-                    onDismissed: (direction) async {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          duration: Duration(seconds: 1),
-                          behavior: SnackBarBehavior.floating,
-                          backgroundColor: Colors.grey,
-                          content: Text(
-                            "Task Done 🥳",
-                            style: TextStyle(color: Colors.white, fontSize: 20),
-                          ),
-                        ),
-                      );
-                      await snapshot.data!.docs[index].reference.delete();
-                    },
-                    child: Card(
-                      child: ListTile(
-                        leading: IconButton(
-                            onPressed: () {
-                              snapshot.data!.docs[index].reference.update({
-                                'isDone': !snapshot.data!.docs[index]['isDone']
-                              });
-                            },
-                            icon: snapshot.data!.docs[index]['isDone']
-                                ? Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 30,
-                                  )
-                                : Icon(
-                                    Icons.circle_outlined,
-                                    color: Colors.purple,
-                                    size: 30,
-                                  )),
-                        title: Text(
-                          snapshot.data!.docs[index]['task'],
-                          style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                              decoration: snapshot.data!.docs[index]['isDone']
-                                  ? TextDecoration.lineThrough
-                                  : null),
+                  ),
+                  onDismissed: (direction) async {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        duration: Duration(seconds: 1),
+                        behavior: SnackBarBehavior.floating,
+                        backgroundColor: Colors.grey,
+                        content: Text(
+                          "Task Done 🥳",
+                          style: TextStyle(color: Colors.white, fontSize: 20),
                         ),
                       ),
+                    );
+                    await snapshot.data!.docs[index].reference.delete();
+                  },
+                  child: Card(
+                    child: ListTile(
+                      leading: IconButton(
+                        onPressed: () {
+                          snapshot.data!.docs[index].reference.update({
+                            'isDone': !snapshot.data!.docs[index]['isDone']
+                          });
+                        },
+                        icon: snapshot.data!.docs[index]['isDone']
+                            ? Icon(
+                                Icons.check_circle,
+                                color: Colors.orange,
+                                size: 30,
+                              )
+                            : Icon(
+                                Icons.circle_outlined,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                      ),
+                      title: Text(
+                        snapshot.data!.docs[index]['task'],
+                        style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w400,
+                            decoration: snapshot.data!.docs[index]['isDone']
+                                ? TextDecoration.lineThrough
+                                : null),
+                      ),
+                      trailing: snapshot.data!.docs[index]['isUrgent']
+                          ? Icon(
+                              Icons.emergency,
+                              color: Colors.orange,
+                            )
+                          : null,
                     ),
                   ),
                 );
